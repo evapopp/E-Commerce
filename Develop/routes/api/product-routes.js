@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     const productDataAll = await Product.findAll();
     res.json(productDataAll);
   }catch (err) {
-    console.log('inside get all products - this did not work!')
+    console.log('inside get all products - this did not work!', err)
     res.status(400).json(err);
   }
   // find all products
@@ -36,8 +36,8 @@ router.get('/:id', async (req, res) => {
     });
     res.status(200).json(productDataOne);
   } catch (err) {
-    console.log('inside get one product  - this did not work')
-    res.status(500).json(err);
+    console.log('inside get one product  - this did not work', err)
+    res.status(400).json(err);
   }
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
@@ -45,6 +45,12 @@ router.get('/:id', async (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
+  // Product.create({
+  //   product_name: req.product_name,
+  //   price: req.body.price,
+  //   stock: req.body.stock,
+  //   tagIds: req.body.tagIds,
+  // });
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -117,8 +123,19 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
+  try {
+    const deleteProduct = await Tag.destroy({
+      where: {
+        id: req.params.id,
+      },
+    })
+    res.status(200).json(deleteProduct);
+  } catch (err) {
+    console.log('inside product delete - thjis did not work!', err);
+    res.status(400).json(err);
+  }
 });
 
 module.exports = router;
