@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
     const productDataAll = await Product.findAll();
     res.json(productDataAll);
   }catch (err) {
-    console.log('inside get all products - this did not work!', err)
     res.status(400).json(err);
   }
   // find all products
@@ -23,7 +22,7 @@ router.get('/:id', async (req, res) => {
       where: {
         id: req.params.id
       },
-      includes: [
+      include: [
         {
           model: Category,
           attributes: 'category_name',
@@ -36,7 +35,6 @@ router.get('/:id', async (req, res) => {
     });
     res.status(200).json(productDataOne);
   } catch (err) {
-    console.log('inside get one product  - this did not work', err)
     res.status(400).json(err);
   }
   // find a single product by its `id`
@@ -45,12 +43,6 @@ router.get('/:id', async (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
-  // Product.create({
-  //   product_name: req.product_name,
-  //   price: req.body.price,
-  //   stock: req.body.stock,
-  //   tagIds: req.body.tagIds,
-  // });
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -130,11 +122,14 @@ router.delete('/:id', async (req, res) => {
       where: {
         id: req.params.id,
       },
-    })
+    });
+    if (!deleteProduct) {
+      res.status(404).json({ message: 'No product data with this id' });
+      return;
+    }
     res.status(200).json(deleteProduct);
   } catch (err) {
-    console.log('inside product delete - thjis did not work!', err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 });
 

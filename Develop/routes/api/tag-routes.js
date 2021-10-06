@@ -5,10 +5,15 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 router.get('/', async (req, res) => {
   try{
-    const tagsDataAll = await Tag.findAll();
+    const tagsDataAll = await Tag.findAll({
+      include: {
+        model: Product,
+        through: ProductTag,
+        attributes: ['product_name', 'price', 'stock', 'category_id'],
+      },
+    });
     res.json(tagsDataAll);
   }catch (err) {
-    console.log ('inside get all tags - this did not work!', err);
     res.status(400).json(err);
   }
   // find all tags
@@ -21,18 +26,21 @@ router.get('/:id', async (req, res) => {
   try {
     const tagsDataOne = await Tag.findOne({
         where: {
-          id: req.params.params.id
+          id: req.params.id
         },
-        includes: {
+        include: {
           model: Product,
           through: ProductTag,
           attributes: ['product_name', 'price', 'stock', 'category_id'],
         },
     });
-    res.status(200).json(categoryDataOne);
+    if (!tagsDataOne) {
+      res.status(404).json({ message: 'No tag data with this id' });
+      return;
+    }
+    res.status(200).json(tagsDataOne);
   } catch (err) {
-    console.log('inside get one tag - this did not work', err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 });
 
@@ -42,7 +50,6 @@ router.post('/', async (req, res) => {
     const newTag = await Tag.create(req.body);
     res.status(200).json(newTag);
   } catch (err) {
-    console.log('inside new tag post -  this did not work!', err)
     res.status(400).json(err);
   }
 });
@@ -54,11 +61,14 @@ router.put('/:id', async (req, res) => {
       where: {
         id: req.params.id,
       },
-    })
+    });
+    if (!updateTag) {
+      res.status(404).json({ message: 'No tag data with this id' });
+      return;
+    }
     res.status(200).json(updateTag);
   } catch (err){
-    console.log('inside tag put - this did not work', err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 });
 
@@ -69,11 +79,14 @@ router.delete('/:id', async (req, res) => {
       where: {
         id: req.params.id,
       },
-    })
+    });
+    if (!deleteTag) {
+      res.status(404).json({ message: 'No tag data with this id' });
+      return;
+    }
     res.status(200).json(deleteTag);
   } catch (err) {
-    console.log('inside tag delete - thjis did not work!', err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 });
 

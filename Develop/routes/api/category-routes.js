@@ -8,7 +8,6 @@ router.get('/', async (req, res) => {
     const categoryDataAll = await Category.findAll();
     res.json(categoryDataAll);
   }catch (err) {
-    console.log ('inside get all categories - this did not work!', err);
     res.status(400).json(err);
   }
   // find all categories
@@ -19,18 +18,19 @@ router.get('/:id', async (req, res) => {
   try {
     const categoryDataOne = await Category.findOne({
       where: {
-        where: {
-          id: req.params.params.id
-        },
-        includes: {
-          model: Product,
-          attributes: 'product_name',
-        },
-      }
+        id: req.params.params.id
+      },
+      include: {
+        model: Product,
+        attributes: 'category_id',
+      },
     });
+    if (!categoryDataOne) {
+      res.status(404).json({ message: 'No category data with this id' });
+      return;
+    }
     res.status(200).json(categoryDataOne);
   } catch (err) {
-    console.log('inside get one category - this did not work', err);
     res.status(400).json(err);
   }
   // find one category by its `id` value
@@ -43,7 +43,6 @@ router.post('/', async (req, res) => {
     const newCategory = await Category.create(req.body);
     res.status(200).json(newCategory);
   } catch (err) {
-    console.log('inside category post -  this did not work!', err)
     res.status(400).json(err);
   }
 });
@@ -58,7 +57,6 @@ router.put('/:id', async (req, res) => {
     })
     res.status(200).json(updateCategory);
   } catch (err){
-    console.log('inside category put - this did not work', err);
     res.status(400).json(err);
   }
 });
@@ -70,10 +68,13 @@ router.delete('/:id', async (req, res) => {
         id: req.params.id,
       },
     })
+    if (!deleteCateogry) {
+      res.status(404).json({ message: 'No category found with this id!' });
+      return;
+    }
     res.status(200).json(deleteCateogry);
   } catch (err) {
-    console.log('inside category delete - thjis did not work!', err);
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
   // delete a category by its `id` value
 });
