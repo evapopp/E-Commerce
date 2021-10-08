@@ -20,11 +20,11 @@ router.get('/:id', async (req, res) => {
   try {
     const categoryDataOne = await Category.findOne({
       where: {
-        id: req.params.params.id
+        id: req.params.id
       },
       include: {
         model: Product,
-        attributes: 'category_id',
+        // attributes: 'category_id',
       },
     });
     if (!categoryDataOne) {

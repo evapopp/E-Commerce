@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
       include: {
         model: Product,
         through: ProductTag,
-        attributes: ['product_name', 'price', 'stock', 'category_id'],
+        // attributes: ['product_name', 'price', 'stock', 'category_id'],
       },
     });
     res.json(tagsDataAll);
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
         include: {
           model: Product,
           through: ProductTag,
-          attributes: ['product_name', 'price', 'stock', 'category_id'],
+          // attributes: ['product_name', 'price', 'stock', 'category_id'],
         },
     });
     if (!tagsDataOne) {
