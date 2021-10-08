@@ -68,6 +68,7 @@ router.delete('/:id', async (req, res) => {
       },
     })
     if (!deleteCateogry) {
+      console.error(message)
       res.status(404).json({ message: 'No category found with this id!' });
       return;
     }

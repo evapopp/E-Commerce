@@ -6,11 +6,12 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', async (req, res) => {
   try{
     const tagsDataAll = await Tag.findAll({
-      include: {
-        model: Product,
-        through: ProductTag,
-        // attributes: ['product_name', 'price', 'stock', 'category_id'],
-      },
+      include:[
+        {
+          model: Product,
+          through: ProductTag,
+        },
+      ],
     });
     res.json(tagsDataAll);
   }catch (err) {
@@ -31,7 +32,6 @@ router.get('/:id', async (req, res) => {
         include: {
           model: Product,
           through: ProductTag,
-          // attributes: ['product_name', 'price', 'stock', 'category_id'],
         },
     });
     if (!tagsDataOne) {
