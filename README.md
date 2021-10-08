@@ -8,6 +8,8 @@ Sequelize, Express, dotenv, Node.js, Javascript
 
 ## Links
 * Repo: https://github.com/evapopp/E-Commerce
-* Demo Video: 
+* Demo Video: https://watch.screencastify.com/v/ol5Uz9aWCSJEvTGDRcHn
 
 ## Page Preview
+![VS Code Preview](./assets/vscode.png)
+![Insomnia Preview](./assets/insomnia.png)
