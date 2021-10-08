@@ -24,11 +24,9 @@ router.get('/:id', async (req, res) => {
       where: {
         id: req.params.id
       },
-      // incluce: [Category, Tag],
       include: [
         {
           model: Category,
-          // attributes: 'category_name',
         },
         {
           model: Tag,
